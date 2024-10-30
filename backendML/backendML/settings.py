@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'PaymentProcessing',
     'push_notifications',
     'channels',  # Required for Django Channels (real-time support)
+    'testmodel',
 ]
 
 MIDDLEWARE = [
