@@ -6,6 +6,8 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+MODELS = os.path.join(BASE_DIR, '/home/clencyc/Dev/Fraud-Detection-Machine-Learning/Models')
+
 # Secret Key & Debug
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")

@@ -21,7 +21,8 @@ WORKDIR /code
 RUN set -e; \
     /usr/local/bin/python -m pip install --upgrade pip ;\
     python -m pip install -r /code/requirements.txt ;\
-    chmod +x /code/entrypoints/entrypoint.sh ;
 
-EXPOSE 8080
-ENTRYPOINT ["/code/entrypoints/entrypoint.sh"]
+EXPOSE 8000
+
+ENV PYTHONUNBUFFERED=1
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

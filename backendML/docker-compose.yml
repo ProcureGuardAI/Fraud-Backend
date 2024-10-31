@@ -8,15 +8,15 @@ services:
       POSTGRES_USER: backendmluser
       POSTGRES_PASSWORD: backendmlpassword
 
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile
     volumes:
-      - .:/app
+      - .:/code
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    command: python manage.py runserver 0.0.0.0:8000
     env_file:
       - .env
 
