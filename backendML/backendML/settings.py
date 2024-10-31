@@ -78,13 +78,21 @@ CHANNEL_LAYERS = {
 
 # Database Configuration
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.getenv("DB_NAME", "backendml"),
+    #     'USER': os.getenv("DB_USER", "backendmluser"),
+    #     'PASSWORD': os.getenv("DB_PASSWORD", "backendmlpassword"),
+    #     'HOST': os.getenv("DB_HOST", "localhost"),
+    #     'PORT': os.getenv("DB_PORT", "5432"),
+    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME", "backendml"),
-        'USER': os.getenv("DB_USER", "backendmluser"),
-        'PASSWORD': os.getenv("DB_PASSWORD", "backendmlpassword"),
-        'HOST': os.getenv("DB_HOST", "db"),
-        'PORT': os.getenv("DB_PORT", "5432"),
+        'NAME': 'backendml',
+        'USER': 'backendmluser',
+        'PASSWORD': 'backendmlpassword',
+        'HOST': 'localhost',  # Update to localhost
+        'PORT': '5432',
     }
 }
 

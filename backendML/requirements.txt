@@ -10,7 +10,10 @@ pytz==2022.6
 sqlparse==0.4.3
 tzdata==2022.6
 psycopg2-binary==2.9.3
-django-push-notifications==1.6.0
+django-push-notifications==3.1.0
 channels
 pytest
 pytest-django
+numpy
+pandas
+scikit-learn

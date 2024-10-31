@@ -6,6 +6,7 @@ from .ml_loader import load_model
 import numpy as np
 import os
 import pickle
+import pandas as pd
 
 model = load_model()
 
@@ -32,39 +33,23 @@ class TestModelEndpoint(APIView):
         
 
     def post(self, request):
-        # contrectnumber, amount, award date, tender title, eval completion, notification, sign-date, start-date, end-date, 
-        contract_number = request.data.get('Contract_number')
-        amount = request.data.get('amount')
-        # Include any other fields you want to process
-        # e.g., award_date, tender_title, eval_completion, etc.
+        try:
+            # Extract and organize test data from the request
+            test_data = request.data.get("data")  # Expecting a JSON format containing necessary fields
+            
+            # Convert input to DataFrame
+            input_df = pd.DataFrame([test_data])  # Wrap in list to create single row DataFrame
+            
+            # Ensure input columns match the model's expected format
+            input_df = input_df.reindex(columns=model.feature_names_in_, fill_value=0)  # Adjust for column order
+            
+            # Run the prediction
+            prediction = model.predict(input_df)
+            
+            return Response({
+                "message": "Prediction successful",
+                "prediction": int(prediction[0])  # Assuming binary output 0 for 'not fraud', 1 for 'fraud'
+            }, status=status.HTTP_200_OK)
         
-        # You can now use these variables to run predictions with your model
-        # model_output = your_model.predict([[Contract_number, amount, ...]])
-        
-        # Just an example response
-        response_data = {
-            "contract_number": contract_number,
-            "amount": amount,
-            "model_prediction": 0  # Replace with your model output
-            # "award_date": "2021-01-01",
-            # "tender_title": "Test Tender",
-            # "eval_completion": "2021-01-02",
-            # "notification": "2021-01-02",
-            # "sign_date": "2021-01-03",
-            # "start_date": "2021-01-04",
-            # "end_date": "2021-01-05",
-            # "financial_year": "2021",
-            # "quarter": "Q1",
-            # "Tender_ref": "MLPP/4/2016-2017",
-            # "Pe_Name": "Ministry of Health",
-            # "supplier": "Test Supplier",
-            # "created_at": "2021-01-01T00:00:00Z",
-
-
-
-            # Include model output or any additional data you want to return
-        }
-        
-        return Response(response_data, status=status.HTTP_200_OK)
-     except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
