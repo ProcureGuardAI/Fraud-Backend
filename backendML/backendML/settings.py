@@ -1,13 +1,14 @@
 from pathlib import Path
 from dotenv import load_dotenv # type: ignore
 import os
+import pickle
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-MODELS = os.path.join(BASE_DIR, '/home/clencyc/Dev/Fraud-Detection-Machine-Learning/Models')
-
+# MODELS = os.path.join(BASE_DIR, '/home/clencyc/Dev/Fraud-Detection-Machine-Learning/Models')
+model_path = os.path.join("/home/clencyc/Dev/Fraud-Detection-Machine-Learning/Models/best_model_random_forest.pkl")
 # Secret Key & Debug
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
@@ -34,7 +35,7 @@ INSTALLED_APPS = [
     'PaymentProcessing',
     'push_notifications',
     'channels',  # Required for Django Channels (real-time support)
-    'testmodel',
+    'testmodel'
 ]
 
 MIDDLEWARE = [

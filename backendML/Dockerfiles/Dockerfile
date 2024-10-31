@@ -1,28 +1,31 @@
 FROM python:3.10
 
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+# Environment settings
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
+# Install necessary packages and dependencies
 RUN apt-get update && apt-get install -y \
     postgresql-client \
+    netcat-openbsd \
+    gettext \
+    httpie \
     && rm -rf /var/lib/apt/lists/*
 
-RUN set -e; \
-    apt-get update && \
-    apt-get -y install netcat-openbsd gettext httpie && \
-    pip install --upgrade pip && \
-    pip install flask && \
-    pip install psycopg2-binary
+# Upgrade pip and install required Python packages
+RUN python -m pip install --upgrade pip --root-user-action=ignore \
+    && pip install flask psycopg2-binary
 
+# Set up the application directory
 RUN mkdir /code
-COPY . /code/
 WORKDIR /code
 
-RUN set -e; \
-    /usr/local/bin/python -m pip install --upgrade pip ;\
-    python -m pip install -r /code/requirements.txt ;\
+# Copy application code and install Python dependencies
+COPY . /code
+RUN pip install -r /code/requirements.txt
 
+# Expose the port Django will use
 EXPOSE 8000
 
-ENV PYTHONUNBUFFERED=1
+# Run the Django application
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

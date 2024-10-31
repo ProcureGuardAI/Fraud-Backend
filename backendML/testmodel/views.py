@@ -2,14 +2,18 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from utils.load_model import load_model
+from .ml_loader import load_model
 import numpy as np
+import os
+import pickle
+
+model = load_model()
 
 class TestModelEndpoint(APIView):
     def get(self, request):
         try:
             # Load the model
-            model = load_model()
+           
 
             # Test prediction (update `test_input` based on your model’s expected input format)
             test_input = np.array([[0]])  # Modify if your model requires a different shape
@@ -29,7 +33,7 @@ class TestModelEndpoint(APIView):
 
     def post(self, request):
         # contrectnumber, amount, award date, tender title, eval completion, notification, sign-date, start-date, end-date, 
-        Contract_number = request.data.get('Contract_number')
+        contract_number = request.data.get('Contract_number')
         amount = request.data.get('amount')
         # Include any other fields you want to process
         # e.g., award_date, tender_title, eval_completion, etc.
@@ -39,7 +43,7 @@ class TestModelEndpoint(APIView):
         
         # Just an example response
         response_data = {
-            "Contract_number": Contract_number,
+            "contract_number": contract_number,
             "amount": amount,
             "model_prediction": 0  # Replace with your model output
             # "award_date": "2021-01-01",
@@ -62,3 +66,5 @@ class TestModelEndpoint(APIView):
         }
         
         return Response(response_data, status=status.HTTP_200_OK)
+     except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
