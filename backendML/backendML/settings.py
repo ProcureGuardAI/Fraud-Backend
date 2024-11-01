@@ -37,8 +37,7 @@ INSTALLED_APPS = [
     'django_filters',  # Used with DRF
     'rest_framework',  # DRF package
     'rest_framework.authtoken',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'corsheaders',  # Required for CORS support
     'core',
     'notifications',
     'reports',
@@ -57,9 +56,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOWED_ALL_ORIGINS = [
+    'http://localhost:3000',
+    'https://web-interface-fraud.vercel.app/dashboard'
+]
 ROOT_URLCONF = 'backendML.urls'
 
 # Templates
