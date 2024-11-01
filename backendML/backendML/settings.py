@@ -16,6 +16,15 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 
 AUTH_USER_MODEL = 'users.User'
 
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'clency2023@gmail.com'
+EMAIL_HOST_PASSWORD = 'freezeon67'
+
 # Application Definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -28,6 +37,8 @@ INSTALLED_APPS = [
     'django_filters',  # Used with DRF
     'rest_framework',  # DRF package
     'rest_framework.authtoken',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'core',
     'notifications',
     'reports',
@@ -48,6 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'backendML.urls'
 
 # Templates
@@ -109,7 +121,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework_json_api.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer'
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.parsers.JSONParser',
     ),
     'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
     'DEFAULT_FILTER_BACKENDS': (

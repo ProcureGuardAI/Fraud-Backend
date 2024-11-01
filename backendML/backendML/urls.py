@@ -16,5 +16,5 @@ urlpatterns = [
     path('api/core/', include('core.urls')),  # Ensure the trailing slash is present
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
     # connecting the test-models urls
-    path('api/testmodel/', include('testmodel.urls')),
+    path('api/', include('testmodel.urls'))
 ]
