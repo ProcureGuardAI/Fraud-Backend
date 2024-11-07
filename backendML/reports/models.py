@@ -10,9 +10,11 @@ class Report(models.Model):
     ]
     
     title = models.CharField(max_length=255)
+    email = models.EmailField()
+    prediction = models.IntegerField()
     description = models.TextField()
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports')
     created_at = models.DateTimeField(auto_now_add=True)
+<<<<<<< HEAD
     updated_at = models.DateTimeField(auto_now=True)
     transaction_id = models.CharField(max_length=50, unique=True)
     fraud_score = models.FloatField(null=True, blank=True)
@@ -32,3 +34,8 @@ class Report(models.Model):
         verbose_name = 'Report'
         verbose_name_plural = 'Reports'
         ordering = ['-created_at']
+=======
+
+    def __str__(self):
+        return f"Report for {self.email} at {self.created_at}"
+>>>>>>> e2547b448a2294b3b8149896b509cae05fa862af

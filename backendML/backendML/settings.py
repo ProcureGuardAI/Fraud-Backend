@@ -1,17 +1,22 @@
 from pathlib import Path
 from dotenv import load_dotenv # type: ignore
 import os
+import pickle
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# MODELS = os.path.join(BASE_DIR, '/home/clencyc/Dev/Fraud-Detection-Machine-Learning/Models')
+model_path = os.path.join("/home/clencyc/Dev/Fraud-Detection-Machine-Learning/Models/best_model_random_forest.pkl")
 # Secret Key & Debug
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost').split(',')
 
 AUTH_USER_MODEL = 'users.User'
+
+# settings.py
 
 # Application Definition
 INSTALLED_APPS = [
@@ -25,6 +30,7 @@ INSTALLED_APPS = [
     'django_filters',  # Used with DRF
     'rest_framework',  # DRF package
     'rest_framework.authtoken',
+    'corsheaders',  # Required for CORS support
     'core',
     'notifications',
     'reports',
@@ -32,6 +38,7 @@ INSTALLED_APPS = [
     'PaymentProcessing',
     'push_notifications',
     'channels',  # Required for Django Channels (real-time support)
+    'testmodel'
 ]
 
 MIDDLEWARE = [
@@ -42,8 +49,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOWED_ALL_ORIGINS = [
+    'http://localhost:3000',
+    'https://web-interface-fraud.vercel.app/dashboard'
+]
 ROOT_URLCONF = 'backendML.urls'
 
 # Templates
@@ -74,13 +88,21 @@ CHANNEL_LAYERS = {
 
 # Database Configuration
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.getenv("DB_NAME", "backendml"),
+    #     'USER': os.getenv("DB_USER", "backendmluser"),
+    #     'PASSWORD': os.getenv("DB_PASSWORD", "backendmlpassword"),
+    #     'HOST': os.getenv("DB_HOST", "localhost"),
+    #     'PORT': os.getenv("DB_PORT", "5432"),
+    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME", "backendml"),
-        'USER': os.getenv("DB_USER", "backendmluser"),
-        'PASSWORD': os.getenv("DB_PASSWORD", "backendmlpassword"),
-        'HOST': os.getenv("DB_HOST", "db"),
-        'PORT': os.getenv("DB_PORT", "5432"),
+        'NAME': 'backendml',
+        'USER': 'backendmluser',
+        'PASSWORD': 'backendmlpassword',
+        'HOST': 'localhost',  # Update to localhost
+        'PORT': '5432',
     }
 }
 
@@ -103,7 +125,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework_json_api.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer'
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.parsers.JSONParser',
     ),
     'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
     'DEFAULT_FILTER_BACKENDS': (

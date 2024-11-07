@@ -6,6 +6,7 @@ objects = BaseManager()
 
 class User(AbstractUser):
     full_name = models.CharField(max_length=100)
+    email = models.EmailField(default='default@example.com')
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     role = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)

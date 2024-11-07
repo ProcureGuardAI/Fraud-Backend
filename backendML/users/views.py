@@ -1,11 +1,15 @@
 from .serializers import RegisterSerializer
+from .models import User
+from django.http import JsonResponse # type: ignore
+from rest_framework.parsers import JSONParser # type: ignore
+from rest_framework import views, status # type: ignore
+from rest_framework.response import Response # type: ignore
+from .serializers import RegisterSerializer, LoginSerializer
+from rest_framework.views import APIView # type: ignore
+from django.contrib.auth import login # type: ignore
 from json import JSONDecodeError
-from django.http import JsonResponse
-from rest_framework.parsers import JSONParser
-from rest_framework import views, status
-from rest_framework.response import Response
-from .serializers import RegisterSerializer
-from rest_framework.views import APIView
+import json
+
 
 class RegisterAPIView(APIView):
     """
@@ -37,13 +41,33 @@ class RegisterAPIView(APIView):
             return JsonResponse({"result":"error", "message":"Json decoding error"}, status=400)
         
 
+class LoginAPIView(APIView):
+    """
+    A simple APIView for logging in a user.
+    """
+    serializer_class = LoginSerializer
 
-# @app_view(['POST'])
-# def register_user(request):
-#     if request.method == 'POST':
-#         serializer = RegisteSerialize(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+    def post(self, request):
+        try:
+            data = JSONParser().parse(request)
+            print(data)
+            email = data.get('email')
+            password = data.get('password')
+
+            user = User.objects.filter(email=email).first()
+            if user is None:
+                return Response({"detail": "User does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer = LoginSerializer(data=data)
+            if serializer.is_valid(raise_exception=True):
+                user = serializer.validated_data['user']
+                login(request, user)
+                return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+            else:
+                print("Serializer errors:", serializer.errors)  # Log serializer errors for debugging
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except json.JSONDecodeError:
+            return JsonResponse({"result": "error", "message": "JSON decoding error"}, status=400)
+        except Exception as e:
+            print(f"Unexpected error: {e}")  # Log any other exceptions
+            return JsonResponse({"result": "error", "message": str(e)}, status=400)
