@@ -1,6 +1,9 @@
 from django.db import models
 from users.models import User
 
+<<<<<<< HEAD
+class Contract(models.Model):
+=======
 class Report(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
@@ -9,9 +12,9 @@ class Report(models.Model):
         ('Flagged', 'Flagged'),
     ]
     
+>>>>>>> origin/main
     title = models.CharField(max_length=255)
     email = models.EmailField()
-    prediction = models.IntegerField()
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 <<<<<<< HEAD

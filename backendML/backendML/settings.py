@@ -2,6 +2,7 @@ from pathlib import Path
 from dotenv import load_dotenv # type: ignore
 import os
 import pickle
+import dj_database_url
 
 load_dotenv()
 
@@ -38,7 +39,9 @@ INSTALLED_APPS = [
     'PaymentProcessing',
     'push_notifications',
     'channels',  # Required for Django Channels (real-time support)
-    'testmodel'
+    'testmodel',
+    'django_celery_beat',
+    'django_apscheduler'
 ]
 
 MIDDLEWARE = [
@@ -88,22 +91,9 @@ CHANNEL_LAYERS = {
 
 # Database Configuration
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': os.getenv("DB_NAME", "backendml"),
-    #     'USER': os.getenv("DB_USER", "backendmluser"),
-    #     'PASSWORD': os.getenv("DB_PASSWORD", "backendmlpassword"),
-    #     'HOST': os.getenv("DB_HOST", "localhost"),
-    #     'PORT': os.getenv("DB_PORT", "5432"),
-    # }
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'backendml',
-        'USER': 'backendmluser',
-        'PASSWORD': 'backendmlpassword',
-        'HOST': 'localhost',  # Update to localhost
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv("DB_URL")
+    )
 }
 
 # Static Files
@@ -152,3 +142,11 @@ PUSH_NOTIFICATIONS_SETTINGS = {
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST ='smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'christineoyiera51@gmail.com'
+EMAIL_HOST_PASSWORD = 'nszi znto dpoh nfpg'
