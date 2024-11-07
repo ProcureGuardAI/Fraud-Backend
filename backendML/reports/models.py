@@ -1,6 +1,5 @@
 from django.db import models
-from users.models import User
-from core.models import CoreModel
+
 # Create your models here.
 
 class Contract(models.Model):
@@ -11,3 +10,4 @@ class Contract(models.Model):
 
     def __str__(self):
         return f"Report for {self.email} at {self.created_at}"
+
