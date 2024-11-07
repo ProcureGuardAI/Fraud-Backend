@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Report
+from .models import Contract
 
-class ReportSerializer(serializers.ModelSerializer):
+class ContractSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Report
-        fields = ['id', 'title', 'description', 'email', 'prediction', 'created_at']
+        model = Contract
+        fields = '__all__'

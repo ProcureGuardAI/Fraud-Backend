@@ -3,10 +3,9 @@ from users.models import User
 from core.models import CoreModel
 # Create your models here.
 
-class Report(models.Model):
+class Contract(models.Model):
     title = models.CharField(max_length=255)
     email = models.EmailField()
-    prediction = models.IntegerField()
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
