@@ -3,6 +3,8 @@ from dotenv import load_dotenv # type: ignore
 import os
 import pickle
 import environ
+import dj_database_url
+
 
 load_dotenv()
 
@@ -40,7 +42,8 @@ INSTALLED_APPS = [
     'push_notifications',
     'channels',  # Required for Django Channels (real-time support)
     'testmodel',
-    
+    'django_celery_beat',
+    'django_apscheduler'
 ]
 
 MIDDLEWARE = [
@@ -91,6 +94,11 @@ CHANNEL_LAYERS = {
 # Database Configuration
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.getenv("DB_URL")
+    )
+}
 
 DATABASES = {
     'default': env.db(),
@@ -101,7 +109,13 @@ STATIC_URL = '/static/'
 # Rest Framework Configuration
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
-    'DEFAULT_PARSER_CLASSES': ('rest_framework_json_api.parsers.JSONParser',),
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+ 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',  # For web-based auth
@@ -135,3 +149,11 @@ PUSH_NOTIFICATIONS_SETTINGS = {
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST ='smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'christineoyiera51@gmail.com'
+EMAIL_HOST_PASSWORD = 'nszi znto dpoh nfpg'
