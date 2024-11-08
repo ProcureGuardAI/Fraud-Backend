@@ -5,8 +5,8 @@ from core.models import CoreModel
 
 class Report(models.Model):
     title = models.CharField(max_length=255)
-    email = models.EmailField()
-    prediction = models.IntegerField()
+    email = models.EmailField(null=True, blank=True)
+    prediction = models.IntegerField(null=True, blank=True)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

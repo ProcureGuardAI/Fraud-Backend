@@ -2,6 +2,7 @@ from pathlib import Path
 from dotenv import load_dotenv # type: ignore
 import os
 import pickle
+import environ
 
 load_dotenv()
 
@@ -38,7 +39,8 @@ INSTALLED_APPS = [
     'PaymentProcessing',
     'push_notifications',
     'channels',  # Required for Django Channels (real-time support)
-    'testmodel'
+    'testmodel',
+    
 ]
 
 MIDDLEWARE = [
@@ -87,25 +89,12 @@ CHANNEL_LAYERS = {
 }
 
 # Database Configuration
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': os.getenv("DB_NAME", "backendml"),
-    #     'USER': os.getenv("DB_USER", "backendmluser"),
-    #     'PASSWORD': os.getenv("DB_PASSWORD", "backendmlpassword"),
-    #     'HOST': os.getenv("DB_HOST", "localhost"),
-    #     'PORT': os.getenv("DB_PORT", "5432"),
-    # }
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'backendml',
-        'USER': 'backendmluser',
-        'PASSWORD': 'backendmlpassword',
-        'HOST': 'localhost',  # Update to localhost
-        'PORT': '5432',
-    }
-}
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+DATABASES = {
+    'default': env.db(),
+}
 # Static Files
 STATIC_URL = '/static/'
 
