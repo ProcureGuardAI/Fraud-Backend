@@ -95,9 +95,7 @@ CHANNEL_LAYERS = {
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv("DB_URL")
-    )
+    'default': env.db(),
 }
 
 DATABASES = {

@@ -22,3 +22,4 @@ dj_database_url
 celery
 django_celery_beat
 django_apscheduler
+django-environ
