@@ -1,27 +1,14 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from.models import Contract
+from .models import Contract
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from contract_parser.serializers import ContractSerializer
 from django.db import transaction
-import PyPDF2
-from django.shortcuts import render, redirect
 from utils.utils import extract_text_from_pdf, process_contract_data
-from .forms import ContractForm
+import logging
 
-
-def create_contract(request):
-    if request.method == 'POST':
-        form = ContractForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('contract_list')
-    else:
-        form = ContractForm()
-    return render(request, 'contract_form.html', {'form': form})
-		
-
+logger = logging.getLogger(__name__)
 class ContractParserView(APIView):
     parser_classes = [MultiPartParser, FormParser, FileUploadParser]
 
@@ -35,15 +22,17 @@ class ContractParserView(APIView):
                 text = extract_text_from_pdf(pdf_file)
                 contract_data = process_contract_data(text)
 
+                # logging
+                logger.debug("Contract data: %s", contract_data)
+
                 # Create a new contract object using the ContractForm
-                form = ContractForm(contract_data)
-                if form.is_valid():
-                    contract = form.save()
-                    serializer = ContractSerializer(contract)
+                serializer = ContractSerializer(data=contract_data)
+                if serializer.is_valid():
+                    serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
                 else:
-                        # Add debugging information
-                    return Response({'error': 'Invalid contract data', 'details': form.errors}, status=status.HTTP_400_BAD_REQUEST)
+                    # Add debugging information
+                    return Response({'error': 'Invalid contract data', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({'error': 'No PDF file provided'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

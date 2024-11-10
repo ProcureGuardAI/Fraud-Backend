@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'channels',  # Required for Django Channels (real-time support)
     'testmodel',
     'django_celery_beat',
-    'django_apscheduler'
+    'django_apscheduler',
+    'contract_parser',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +59,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True 
 CORS_ALLOWED_ALL_ORIGINS = [
     'http://localhost:3000',
     'https://web-interface-fraud.vercel.app/dashboard'
@@ -98,20 +98,14 @@ DATABASES = {
     'default': env.db(),
 }
 
-DATABASES = {
-    'default': env.db(),
-}
-# Static Files
 STATIC_URL = '/static/'
+
 
 # Rest Framework Configuration
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
-    ],
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
     ],
  
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -121,7 +115,6 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework_json_api.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework.parsers.JSONParser',
     ),
     'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
     'DEFAULT_FILTER_BACKENDS': (
@@ -155,3 +148,19 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'christineoyiera51@gmail.com'
 EMAIL_HOST_PASSWORD = 'nszi znto dpoh nfpg'
+
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
