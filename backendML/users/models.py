@@ -1,12 +1,9 @@
-from multiprocessing.managers import BaseManager
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
-objects = BaseManager()
-
 class User(AbstractUser):
     full_name = models.CharField(max_length=100)
-    email = models.EmailField(default='default@example.com')
+    email = models.EmailField(unique=True)  # Ensure email is unique
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     role = models.CharField(max_length=100, blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)
@@ -16,14 +13,14 @@ class User(AbstractUser):
 
     groups = models.ManyToManyField(
         Group,
-        related_name='clency',
+        related_name='user_groups',
         blank=True,
         help_text='The groups this user belongs to.',
         verbose_name='groups',
     )
     user_permissions = models.ManyToManyField(
         Permission,
-        related_name='clency',
+        related_name='user_permissions',
         blank=True,
         help_text='Specific permissions for this user.',
         verbose_name='user permissions',
