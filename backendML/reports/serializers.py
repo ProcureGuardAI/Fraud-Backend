@@ -1,10 +1,9 @@
 from rest_framework import serializers
-from .models import Contract
+from .models import Reports
 
 class ContractSerializer(serializers.ModelSerializer):
     class Meta:
-
-        model = Contract
+        model = Reports
         fields = '__all__'
         read_only_fields = ['created_at', 'updated_at', 'fraud_score', 'is_flagged']
     

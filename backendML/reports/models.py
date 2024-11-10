@@ -1,8 +1,7 @@
 from django.db import models
-from users.models import User
 
-
-class Contract(models.Model):
+class Reports(models.Model):
+    
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
         ('In Progress', 'In Progress'),
@@ -26,5 +25,5 @@ class Contract(models.Model):
         self.status = 'Flagged' if self.is_flagged else self.status
         self.save()
         
-    def __str__(self):
-        return f"Report for {self.email} at {self.created_at}"
+class Meta:
+    db_table = "reports_reports" 
