@@ -1,30 +1,31 @@
-FROM python:3.10
+# Use a lightweight Python 3.10 image
+FROM python:3.10-slim
 
-# Environment settings
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
+# Environment variables to control Python behavior
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
 
-# Install necessary packages and dependencies
-RUN apt-get update && apt-get install -y \
+# Install system packages and dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     postgresql-client \
     netcat-openbsd \
     gettext \
-    httpie \
-    && rm -rf /var/lib/apt/lists/*
+    httpie && \
+    rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip and install required Python packages
-RUN python -m pip install --upgrade pip --root-user-action=ignore \
-    && pip install flask psycopg2-binary
+# Upgrade pip and install initial Python packages
+RUN python -m pip install --upgrade pip && \
+    pip install flask psycopg2-binary
 
-# Set up the application directory
-RUN mkdir /code
+# Set the application directory
 WORKDIR /code
 
-# Copy application code and install Python dependencies
+# Copy the application code and install requirements
 COPY . /code
-RUN pip install -r /code/requirements.txt
+RUN pip install -r requirements.txt
 
-# Expose the port Django will use
+# Expose the port for Django
 EXPOSE 8000
 
 # Run the Django application

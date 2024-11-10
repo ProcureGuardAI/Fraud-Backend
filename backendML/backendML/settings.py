@@ -93,14 +93,11 @@ CHANNEL_LAYERS = {
 }
 
 # Database Configuration
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 DATABASES = {
     'default': env.db(),
-}
-
-DATABASES = {
-    'default': env.db(),
+    'default': dj_database_url.parse(
+        os.getenv("DATABASE_URL")
+    )
 }
 # Static Files
 STATIC_URL = '/static/'
