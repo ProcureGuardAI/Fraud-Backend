@@ -1,12 +1,25 @@
 from rest_framework import serializers
-from .models import User  # Ensure you import your custom User model if you have one
+from .models import User  # Ensure you import your custom User model
 from django.contrib.auth import authenticate
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'email', 'full_name', 
+            'phone_number', 'role', 'department', 'office_location', 
+            'security_question', 'two_fa'
+        ]
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'full_name', 'phone_number', 'role', 'department', 'office_location', 'security_question', 'two_fa']
+        fields = [
+            'username', 'email', 'password', 'full_name', 'phone_number', 
+            'role', 'department', 'office_location', 'security_question', 'two_fa'
+        ]
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -26,6 +39,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
+
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
@@ -35,7 +49,7 @@ class LoginSerializer(serializers.Serializer):
         password = data.get('password')
 
         if email and password:
-            user = authenticate(username=email, password=password)
+            user = authenticate(request=self.context.get('request'), username=email, password=password)
             if user:
                 if not user.is_active:
                     raise serializers.ValidationError('User account is disabled.')
