@@ -15,5 +15,3 @@ class ContractSerializer(serializers.ModelSerializer):
         if value == 'Resolved' and not self.instance.is_flagged:
             raise serializers.ValidationError("Status can't be set to 'Resolved' without the report being flagged.")
         return value
-
-        fields = ['id', 'title', 'description', 'email', 'prediction', 'created_at']

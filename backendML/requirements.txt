@@ -4,6 +4,7 @@ django-extensions
 django-filter
 djangorestframework
 djangorestframework-jsonapi
+djangorestframework-simplejwt
 inflection
 python-dotenv
 pytz

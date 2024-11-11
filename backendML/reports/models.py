@@ -8,12 +8,11 @@ class Reports(models.Model):
         ('Resolved', 'Resolved'),
         ('Flagged', 'Flagged'),
     ]
-    
+
 
     title = models.CharField(max_length=255)
     email = models.EmailField(null=True, blank=True)
     prediction = models.IntegerField(null=True, blank=True)
-    email = models.EmailField()
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
@@ -24,6 +23,6 @@ class Reports(models.Model):
         self.is_flagged = score > 0.5  # Example threshold
         self.status = 'Flagged' if self.is_flagged else self.status
         self.save()
-        
+
 class Meta:
-    db_table = "reports_reports" 
+    db_table = "reports_reports"
