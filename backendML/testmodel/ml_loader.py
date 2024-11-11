@@ -1,3 +1,4 @@
+# This file is not currently in use because we are using a deployed Llama model.
 # api/ml_model_loader.py
 import pickle
 
