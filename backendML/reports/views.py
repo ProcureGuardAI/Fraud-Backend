@@ -1,10 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.core.mail import send_mail
-from .models import Contract
+from django.core.mail import EmailMessage
+from .models import Reports
 from .serializers import ContractSerializer
 from backendML.settings import EMAIL_HOST_USER
+from django.http import HttpResponse
+from django.conf import settings
+from django.template.loader import get_template
 
 
 class ReportBuilder:
@@ -15,22 +18,27 @@ class ReportBuilder:
 
     def generate_report(self):
         # Instead of rendering a template, return the data directly
-        return self.data
+        template = get_template(self.template_name)
+        return template.render(self.data)
     
     def send_report(self, subject, recipient_email):
         # Implement the email sending logic here
-        send_mail(
-            subject,
-            self.description,
-            EMAIL_HOST_USER,
-            [recipient_email],
-            fail_silently=False,
-        )
+        try:
+            email = EmailMessage(
+                subject,
+                self.description,
+                settings.EMAIL_HOST_USER,
+                [recipient_email],
+            )
+            email.attach(self.generate_report())
+            email.send()
+        except Exception as e:
+            print(f"Error sending email: {e}")
 
 
 class GenerateReport(APIView):
     def get(self, request):
-        contracts = Contract.objects.all()
+        contracts = Reports.objects.all()
         serializer = ContractSerializer(contracts, many=True)
         description = "This is a report of all contracts."
         report_builder = ReportBuilder('reports.html', serializer.data, description)
@@ -41,3 +49,7 @@ class GenerateReport(APIView):
             return Response({"message": "Report sent successfully!"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def home(request):
+    return HttpResponse("Welcome to the Home Page")

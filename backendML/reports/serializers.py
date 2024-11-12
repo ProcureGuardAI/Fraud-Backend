@@ -1,10 +1,9 @@
 from rest_framework import serializers
-from .models import Contract
+from .models import Reports
 
 class ContractSerializer(serializers.ModelSerializer):
     class Meta:
-
-        model = Contract
+        model = Reports
         fields = '__all__'
         read_only_fields = ['created_at', 'updated_at', 'fraud_score', 'is_flagged']
     
@@ -16,5 +15,3 @@ class ContractSerializer(serializers.ModelSerializer):
         if value == 'Resolved' and not self.instance.is_flagged:
             raise serializers.ValidationError("Status can't be set to 'Resolved' without the report being flagged.")
         return value
-
-        fields = ['id', 'title', 'description', 'email', 'prediction', 'created_at']

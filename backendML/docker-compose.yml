@@ -1,14 +1,4 @@
 services:
-  db:
-    image: postgres:13
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "5433:5432"
   django:
     build:
       context: .
@@ -20,9 +10,4 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     env_file:
       - .env
-    depends_on:
-      - db
     network_mode: bridge
-
-volumes:
-  postgres_data:

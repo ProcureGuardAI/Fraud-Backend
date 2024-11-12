@@ -1,9 +1,9 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Report
+from .models import Reports
 from notifications.models import Notification
 
-@receiver(post_save, sender=Report)
+@receiver(post_save, sender=Reports)
 def report_status_change(sender, instance, created, **kwargs):
     print(f"Signal triggered for report: {instance.title}, created: {created}, status: {instance.status}")  # Debugging: Print signal trigger
     if not created and instance.status == 'Resolved':
