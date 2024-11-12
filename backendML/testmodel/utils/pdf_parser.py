@@ -1,4 +1,7 @@
 import fitz  # PyMuPDF
+import pytesseract
+from PIL import Image
+import io
 import requests
 import json
 import base64
@@ -14,6 +17,12 @@ def extract_pdf_contents(pdf_path):
         for page_num in range(document.page_count):
             page = document.load_page(page_num)
             text += page.get_text()
+            
+            # If no text is found, try OCR
+            if not text.strip():
+                pix = page.get_pixmap()
+                img = Image.open(io.BytesIO(pix.tobytes()))
+                text += pytesseract.image_to_string(img)
         
         return text
     except Exception as e:
@@ -23,6 +32,7 @@ def extract_pdf_contents(pdf_path):
 # Function to base64 encode the extracted file contents
 def encode_file_contents(file_contents):
     return base64.b64encode(file_contents.encode('utf-8')).decode('utf-8')
+
 
 # Function to call the API with the extracted text, formatted as required
 def send_pdf_to_api(pdf_path):
