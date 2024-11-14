@@ -154,6 +154,8 @@ def send_pdf_to_api_and_local(pdf_path):
             logger.info(f"Features for local model: {features}")
             second_model_response = model2.predict([features])[0]  # Adjust as needed for your model
             logger.info(f"Response from local model: {second_model_response}")
+            second_model_response = int(second_model_response)  # Convert to int if needed
+            print(second_model_response)
         except Exception as e:
             logger.error(f"Error processing with local model: {e}")
             return {"error": f"Error processing with local model: {e}"}
@@ -164,13 +166,12 @@ def send_pdf_to_api_and_local(pdf_path):
 
         return {
             "first_model_response": first_model_response,
-            "second_model_response": csv_result,
+            "second_model_response": second_model_response,
             "features_used_for_prediction": features  # Add this to see the features used for prediction
         }
     else:
         logger.error("No content extracted from the PDF.")
         return {"error": "No content extracted from the PDF."}
-    
     # Path to your PDF file
 pdf_path = "/home/clencyc/Downloads/TestData/Supply-contract-greement.pdf"
 
