@@ -183,3 +183,4 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'christineoyiera51@gmail.com'
 EMAIL_HOST_PASSWORD = 'nszi znto dpoh nfpg'
+

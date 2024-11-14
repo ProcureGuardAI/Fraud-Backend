@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .utils.pdf_parser import send_pdf_to_api  # Import your PDF parsing function
+from .utils.pdf_parser import send_pdf_to_api_and_local # Import your PDF parsing function
 
 @csrf_exempt
 def handle_pdf_upload(request):
@@ -14,7 +14,7 @@ def handle_pdf_upload(request):
                 f.write(chunk)
 
         # Process the PDF
-        result = send_pdf_to_api(file_path)
+        result = send_pdf_to_api_and_local(file_path)
 
         # Return the API response to React
         return JsonResponse({"status": "success", "result": result})
