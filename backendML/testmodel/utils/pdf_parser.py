@@ -1,3 +1,5 @@
+# FILE: testmodel/utils/pdf_parser.py
+
 import fitz  # PyMuPDF
 import pytesseract
 from PIL import Image
@@ -9,21 +11,21 @@ import markdown
 import logging
 import csv
 import joblib  # For loading the local model
+from backendML.utils import generate_and_send_report  # Import the generate_report function
 
 # Configure logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # Load your local model (e.g., scikit-learn, custom ML model)
-model2 = joblib.load('/home/clencyc/Dev/Fraud-Detection-Machine-Learning/Models/best_model_random_forest.pkl')
+model2 = joblib.load('/home/james/Documents/AI/Fraud-Detection-Machine-Learning/best_model_random_forest.pkl')
 
 # Define the fields to be extracted
 fields = [
     "Contract Number", "Amount", "Award Date", "Tender Title", "Eval Completion Date", 
     "Notification Of Award Date", "Sign Date", "Start Date", "End Date", 
     "Agpo Certificate Number", "Awarded Agpo Group Id", "Created By", "Terminated", 
-    "Financial Year", "Quarter", "Tender Ref.", "PE Name", "Supplier Name", 
-    "No. of B.O.I", "Created At"
+    "Financial Year", "Quarter", "Tender Ref.", "PE Name", "Supplier Name"
 ]
 
 # Function to extract text from a PDF file
@@ -112,7 +114,7 @@ def send_pdf_to_api_and_local(pdf_path):
         encoded_contents = encode_file_contents(file_contents)
         if encoded_contents is None:
             logger.error("Failed to encode file contents.")
-            return
+            return {"error": "Failed to encode file contents."}
         
         # Data formatted for the first API (expects JSON)
         data = {
@@ -154,48 +156,17 @@ def send_pdf_to_api_and_local(pdf_path):
             logger.info(f"Features for local model: {features}")
             second_model_response = model2.predict([features])[0]  # Adjust as needed for your model
             logger.info(f"Response from local model: {second_model_response}")
+            second_model_response = int(second_model_response)  # Convert numpy.int64 to int
         except Exception as e:
             logger.error(f"Error processing with local model: {e}")
             return {"error": f"Error processing with local model: {e}"}
         logger.info(f"Extracted features (first 5): {features[:5]}...")
 
-        # Convert the plain text response to CSV
-        csv_result = plain_text_to_csv(second_model_response)
-
         return {
             "first_model_response": first_model_response,
-            "second_model_response": csv_result,
+            "second_model_response": second_model_response,
             "features_used_for_prediction": features  # Add this to see the features used for prediction
         }
     else:
         logger.error("No content extracted from the PDF.")
         return {"error": "No content extracted from the PDF."}
-    
-    # Path to your PDF file
-pdf_path = "/home/clencyc/Downloads/TestData/Supply-contract-greement.pdf"
-
-# Call the function to process the PDF
-result = send_pdf_to_api_and_local(pdf_path)
-
-# Log the final result
-logger.info(f"Final result: {result}")
-if "features_used_for_prediction" in result:
-    logger.info(f"Features used for prediction: {result['features_used_for_prediction']}")
-
-# # Path to your PDF files
-# pdf_paths = [
-#     "/home/clencyc/Downloads/TestData/Awarded Contracts  4th  Quarter April  to June_ 2019-20 - 2020.pdf",
-#     "/home/clencyc/Downloads/TestData/Q4 2017- 2018 CONTRACT AWARDS.pdf",
-#     "/home/clencyc/Downloads/TestData/Subscription_Pricing_Research_Report_Procurement_Fraud_Detection_Kenya.pdf",
-#     "/home/clencyc/Downloads/TestData/Supply-contract-greement.pdf",
-#     "/home/clencyc/Downloads/TestData/_Contract Number__C-2024-0923_.pdf"
-# ]
-
-# # Call the function to process the PDFs
-# results = [send_pdf_to_api_and_local(pdf_path) for pdf_path in pdf_paths]
-
-# # Log the final results
-# for i, result in enumerate(results):
-#     logger.info(f"Final result for PDF {i+1}: {result}")
-#     if "features_used_for_prediction" in result:
-#         logger.info(f"Features used for prediction for PDF {i+1}: {result['features_used_for_prediction']}")
