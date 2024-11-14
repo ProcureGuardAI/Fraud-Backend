@@ -9,7 +9,6 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.template.loader import get_template
 from testmodel.utils.pdf_parser import send_pdf_to_api_and_local
-import logging
 
 # FILE: reports/views.py
 
