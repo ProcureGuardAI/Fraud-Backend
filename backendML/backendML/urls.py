@@ -4,8 +4,9 @@ from rest_framework import routers # type: ignore
 from core import views as core_views
 from rest_framework.authtoken.views import obtain_auth_token # type: ignore
 
+# Create a router for viewsets
 router = routers.DefaultRouter()
-router.register(r'transactions', core_views.TransactionViewSet, basename='transaction')
+router.register('core/transactions', core_views.TransactionViewSet, basename='transactions')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
