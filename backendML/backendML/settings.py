@@ -2,23 +2,25 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 import pickle
-import environ
+from django.core.exceptions import ImproperlyConfigured
 import dj_database_url
 from datetime import timedelta
+import environ
 
-
-load_dotenv()
+# Initialize environ
+env = environ.Env()
+environ.Env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key-here')
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='your-default-secret-key-here')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
-RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+RENDER_EXTERNAL_HOSTNAME = env('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
@@ -96,7 +98,7 @@ CHANNEL_LAYERS = {
 }
 
 # Database Configuration
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL = env('DATABASE_URL')
 if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.config(
@@ -172,15 +174,13 @@ REST_FRAMEWORK = {
 
 # Push Notifications (Optional - configure for your environment)
 PUSH_NOTIFICATIONS_SETTINGS = {
-    "FCM_API_KEY": os.getenv("FCM_API_KEY"),  # Firebase Cloud Messaging Key
-    "GCM_API_KEY": os.getenv("GCM_API_KEY"),  # Google Cloud Messaging Key (if needed)
-    "APNS_CERTIFICATE": os.getenv("APNS_CERTIFICATE_PATH"),  # Apple push certificate path
+    "FCM_API_KEY": env('FCM_API_KEY'),  # Firebase Cloud Messaging Key
+    "GCM_API_KEY": env('GCM_API_KEY'),  # Google Cloud Messaging Key (if needed)
+    "APNS_CERTIFICATE": env('APNS_CERTIFICATE_PATH'),  # Apple push certificate path
     "UPDATE_ON_DUPLICATE_REG_ID": True,
 }
 
 # Simple JWT Configuration
-from datetime import timedelta
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
