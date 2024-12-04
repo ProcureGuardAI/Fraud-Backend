@@ -1,6 +1,6 @@
 # FILE: testmodel/utils/pdf_parser.py
 
-from pymupdf import fitz  # Import fitz from pymupdf
+import fitz  # PyMuPDF
 import pytesseract
 from PIL import Image
 import io

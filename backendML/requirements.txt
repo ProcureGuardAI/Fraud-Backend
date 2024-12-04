@@ -55,7 +55,7 @@ psycopg2-binary
 puremagic
 pydot
 PyJWT
-pymupdf==1.22.3
+PyMuPDF==1.23.8
 pyparsing
 pytesseract
 pytest
