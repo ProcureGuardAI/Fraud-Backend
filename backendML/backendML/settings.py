@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
     ),
-    'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',  # Use the default DRF exception handler
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
@@ -198,3 +198,4 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'christineoyiera51@gmail.com'
 EMAIL_HOST_PASSWORD = 'nszi znto dpoh nfpg'
+
