@@ -40,6 +40,7 @@ joblib
 kombu
 looseversion
 lxml
+markdown>=3.4.3
 networkx
 nibabel
 nipype
