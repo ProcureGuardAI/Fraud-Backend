@@ -1,5 +1,4 @@
 from pathlib import Path
-from dotenv import load_dotenv
 import os
 import pickle
 from django.core.exceptions import ImproperlyConfigured
@@ -7,17 +6,26 @@ import dj_database_url
 from datetime import timedelta
 import environ
 
-# Initialize environ
-env = environ.Env()
-environ.Env.read_env()
+# Initialize environ settings
+env = environ.Env(
+    DJANGO_DEBUG=(bool, False),
+    DJANGO_SECRET_KEY=(str, 'moviness'),
+    DATABASE_URL=(str, None),
+    RENDER_EXTERNAL_HOSTNAME=(str, None),
+    FCM_API_KEY=(str, None),
+    GCM_API_KEY=(str, None),
+    APNS_CERTIFICATE_PATH=(str, None),
+)
 
+# Read .env file
 BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('DJANGO_SECRET_KEY', default='your-default-secret-key-here')
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DJANGO_DEBUG', default=False)
+DEBUG = env.bool('DJANGO_DEBUG')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 RENDER_EXTERNAL_HOSTNAME = env('RENDER_EXTERNAL_HOSTNAME')
