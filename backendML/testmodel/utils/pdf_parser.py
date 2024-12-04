@@ -11,14 +11,23 @@ import markdown
 import logging
 import csv
 import joblib  # For loading the local model
+import os
+from django.conf import settings
 from backendML.utils import generate_and_send_report  # Import the generate_report function
 
 # Configure logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-# Load your local model (e.g., scikit-learn, custom ML model)
-model2 = joblib.load('/home/james/Documents/AI/Fraud-Detection-Machine-Learning/best_model_random_forest.pkl')
+# Get the model path relative to the project root
+MODEL_PATH = os.path.join(settings.BASE_DIR, 'model', 'best_model_random_forest.pkl')
+
+try:
+    model2 = joblib.load(MODEL_PATH)
+    logger.info(f"Successfully loaded model from {MODEL_PATH}")
+except Exception as e:
+    logger.error(f"Failed to load model from {MODEL_PATH}: {str(e)}")
+    raise
 
 # Define the fields to be extracted
 fields = [
