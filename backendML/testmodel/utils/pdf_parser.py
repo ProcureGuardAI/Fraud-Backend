@@ -1,6 +1,6 @@
 # FILE: testmodel/utils/pdf_parser.py
 
-import fitz  # PyMuPDF
+import PyMuPDF  # Use PyMuPDF instead of fitz
 import pytesseract
 from PIL import Image
 import io
@@ -32,13 +32,13 @@ fields = [
 def extract_pdf_contents(pdf_path):
     try:
         # Open the PDF
-        document = fitz.open(pdf_path)
+        document = PyMuPDF.PdfDocument(pdf_path)
         text = ""
         
         # Extract text from each page
-        for page_num in range(document.page_count):
+        for page_num in range(len(document.pages)):
             try:
-                page = document.load_page(page_num)
+                page = document.pages[page_num]
                 page_text = page.get_text()
                 logger.debug(f"Extracted text from page {page_num}: {page_text}")
                 text += page_text
