@@ -29,7 +29,7 @@ djangorestframework-jsonapi
 djangorestframework-simplejwt
 etelemetry
 filelock
-fitz
+gunicorn
 httplib2
 idna
 importlib_resources
@@ -55,7 +55,7 @@ psycopg2-binary
 puremagic
 pydot
 PyJWT
-PyMuPDF
+pymupdf==1.22.3
 pyparsing
 pytesseract
 pytest
@@ -80,3 +80,4 @@ tzlocal
 urllib3
 vine
 wcwidth
+whitenoise
