@@ -174,11 +174,18 @@ REST_FRAMEWORK = {
 
 # Push Notifications (Optional - configure for your environment)
 PUSH_NOTIFICATIONS_SETTINGS = {
-    "FCM_API_KEY": env('FCM_API_KEY'),  # Firebase Cloud Messaging Key
-    "GCM_API_KEY": env('GCM_API_KEY'),  # Google Cloud Messaging Key (if needed)
-    "APNS_CERTIFICATE": env('APNS_CERTIFICATE_PATH'),  # Apple push certificate path
+    "FCM_API_KEY": env('FCM_API_KEY', default=None),  # Firebase Cloud Messaging Key
+    "GCM_API_KEY": env('GCM_API_KEY', default=None),  # Google Cloud Messaging Key (if needed)
+    "APNS_CERTIFICATE": env('APNS_CERTIFICATE_PATH', default=None),  # Apple push certificate path
     "UPDATE_ON_DUPLICATE_REG_ID": True,
 }
+
+if not any([
+    PUSH_NOTIFICATIONS_SETTINGS['FCM_API_KEY'],
+    PUSH_NOTIFICATIONS_SETTINGS['GCM_API_KEY'],
+    PUSH_NOTIFICATIONS_SETTINGS['APNS_CERTIFICATE']
+]):
+    INSTALLED_APPS = [app for app in INSTALLED_APPS if app != 'push_notifications']
 
 # Simple JWT Configuration
 SIMPLE_JWT = {
